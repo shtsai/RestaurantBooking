@@ -1,5 +1,4 @@
 <html>
-
 <head>
 </head>
 
@@ -18,8 +17,7 @@ if ($conn->connect_error) {
 }
     
 
-echo "Hi " . $_POST['cname'] . "!<br><br>" ;
-
+$cname = $_POST['cname'];
 $date = date_parse_from_format("Y-m-d", $_POST['date']); 
 $month = $date["month"];
 $day = $date["day"];
@@ -42,13 +40,22 @@ if (strlen($_POST['keyword']) > 0) {
 }
 $query .= ";";
 
+echo "Hi " . $cname . "!<br><br>" ;
 $result = $conn->query($query);
 if ($result->num_rows > 0) {
-    echo "Below is a list of available restaurant that you might be interested in:<br>";
+    echo "Below is a list of available restaurant that you might be interested in:<br><br>";
     echo "<table>";
     while ($row = $result->fetch_assoc()) {
+	$tmp = "<input type=\"hidden\" name=\"rid\" value=" . $row["rid"] . ">"
+	      . "<input type=\"hidden\" name=\"cname\" value= '$cname'>"
+	      . "<input type=\"hidden\" name=\"cquantity\" value=" . $cquantity . ">"
+	      . "<input type=\"hidden\" name=\"date\" value=" . $_POST['date'] . ">"
+	      . "<input type=\"hidden\" name=\"stime\" value=" . $stime . ">";
+
+	$tmp2 = "<input type=\"submit\" value=\"Reserve\">";
 	echo "<tr>";
-	echo "<td>" . $row['rname'] . "</td><td>" . $row['raddress'] . "</td><td>" . $row['description'] . "</td><td>" . "1" . "</td>";
+	echo "<td>" . $row['rname'] . "</td><td>" . $row['raddress'] . "</td><td>" . $row['description'] 
+	     . "</td><td><form action=\"reserve.php\" method=\"post\">" . $tmp . $tmp2 . "</form></td>";
 	echo "</tr>";
     }
     echo "</table>";
@@ -57,9 +64,7 @@ if ($result->num_rows > 0) {
 }
 
 $conn->close();
-
 ?>
 
 </body>
-
 </html>
