@@ -36,7 +36,7 @@ $query = "SELECT DISTINCT rid, rname, raddress, description
 			GROUP BY rid
 			HAVING capacity - SUM(quantity) < $cquantity)";
 if (strlen($_POST['keyword']) > 0) {
-    $query .= "AND description LIKE '%{$_POST['keyword']}%'";
+    $query .= "AND (description LIKE '%{$_POST['keyword']}%' OR rname LIKE '%{$_POST['keyword']}%')";
 }
 $query .= ";";
 
